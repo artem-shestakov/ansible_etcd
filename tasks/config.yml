@@ -4,7 +4,7 @@
     src: etcd.conf.yml.j2
     dest: "{{ etcd_config_dir }}/{{ etcd_config_file_name }}"
     owner: etcd
-    mode: 0600
+    mode: 0606
   notify: 
     - Restart
     - Health
