@@ -1,0 +1,6 @@
+---
+- name: Install Etcd
+  include_tasks: install.yml
+
+- name: Configuration Etcd
+  include_tasks: config.yml

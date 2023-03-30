@@ -1,0 +1,10 @@
+---
+- name: "Configuration Etcd | Create Etcd configuration file"
+  ansible.builtin.template:
+    src: etcd.conf.yml.j2
+    dest: "{{ etcd_config_dir }}/{{ etcd_config_file_name }}"
+    owner: etcd
+    mode: 0600
+  notify: 
+    - Restart
+    - Health

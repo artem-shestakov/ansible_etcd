@@ -1,0 +1,27 @@
+---
+galaxy_info:
+  author: Artem Shestakov
+  role_name: etcd
+  namespace: artem_shestakov
+  description: Ansible role to install Etcd https://etcd.io/
+
+  license: license (BSD, MIT)
+
+  min_ansible_version: "2.7"
+
+  platforms:
+    - name: Ubuntu
+      versions:
+        - bionic
+        - focal
+        - jammy
+    - name: EL
+      versions:
+        - "8"
+
+  galaxy_tags:
+    - etcd
+    - dcs
+    - storage
+
+dependencies: []

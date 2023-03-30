@@ -1,0 +1,65 @@
+- name: Add etcd user
+  user:
+    name: etcd
+    shell: /usr/sbin/nologin
+    home: "{{ etcd_data_dir }}"
+
+- name: "Install Etcd | Create directory for Etcd"
+  ansible.builtin.file:
+    path: "{{ item.path }}"
+    state: directory
+    owner: etcd
+    # group: root
+    mode: "{{ item.mode }}"
+  with_items: 
+    - {path: "/tmp/etcd_{{ etcd_version }}", mode: '0755'}
+    - {path: "{{ etcd_config_dir }}", mode: '0700'}
+    - {path: "{{ etcd_data_dir }}", mode: '0700'}
+
+- name: "Install Etcd | Download the tarball into the /tmp directory"
+  ansible.builtin.get_url:
+    url: "https://github.com/etcd-io/etcd/releases/download/v{{ etcd_version }}/etcd-v{{ etcd_version }}-linux-amd64.tar.gz"
+    dest: "/tmp/etcd_{{ etcd_version }}.tar.gz"
+    owner: etcd
+    mode: 0600
+    force: True
+
+- name: "Install Etcd | Extract the contents of the tarball"
+  ansible.builtin.unarchive:
+    src: "/tmp/etcd_{{ etcd_version }}.tar.gz"
+    dest: "/tmp/etcd_{{ etcd_version }}"
+    owner: etcd
+    mode: 0600
+    extra_opts:
+      - --strip-components=1
+    decrypt: True
+    remote_src: True
+
+- name: "Install Etcd | Copy 'etcd' and 'etcdctl' to /usr/local/bin/"
+  copy:
+    src: "/tmp/etcd_{{ etcd_version }}/{{ item }}"
+    dest: /usr/local/bin/
+    mode: u+x,g+x,o+x
+    remote_src: true
+  loop:
+    - etcd
+    - etcdctl
+
+- name: "Install Etcd | Set the ETCDCTL_API environment variable to 3"
+  ansible.builtin.lineinfile:
+    path: /etc/profile
+    line: export ETCDCTL_API=3
+    state: present
+    create: True
+    insertafter: EOF
+
+- name: "Install Etcd | Create a etcd service"
+  ansible.builtin.template:
+    src: etcd.service.j2
+    dest: /etc/systemd/system/etcd.service
+    owner: root
+    group: root
+    mode: 0644
+  notify: 
+    - Restart
+    - Health
