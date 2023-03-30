@@ -4,7 +4,6 @@ etcd_bin_dir: /opt/etcd/bin
 etcd_config_dir: /etc/etcd
 etcd_config_file_name: etcd.conf.yml
 etcd_data_dir: "/var/lib/etcd/{{ inventory_hostname }}.etcd"
-etcd_listen_interface: "{{}}"
 
 # Configuration options
 etcd_name: "{{ inventory_hostname }}"

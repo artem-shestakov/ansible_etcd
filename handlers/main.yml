@@ -1,6 +1,6 @@
 ---
 - name: Restart Etcd service
-  systemd:
+  ansible.builtin.systemd:
     name: etcd
     enabled: true
     daemon_reload: true
@@ -8,7 +8,7 @@
   listen: Restart
 
 - name: Wait until the etcd cluster is healthy
-  command: >
+  ansible.builtin.command: >
     /usr/local/bin/etcdctl endpoint health
     --endpoints=http://{{ inventory_hostname }}:2379
   register: etcd_health_result
