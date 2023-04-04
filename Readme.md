@@ -3,6 +3,7 @@ Ansible role to install Etcd server.
 
 ## Variables
 ### Installation variables
+* `etcd_bin_dir` - directory to install Etcd binary. default: `/usr/local/bin/`
 * `etcd_config_dir` - directory with Etcd configuration file. Default: `/etc/etcd`
 * `etcd_config_file_name` - the name of configuration file. Default: `etcd.conf.yml`
 * `etcd_data_dir` - directory to store data. Default: `/var/lib/etcd/{{ inventory_hostname }}.etcd`

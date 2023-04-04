@@ -38,7 +38,7 @@
 - name: "Install Etcd | Copy 'etcd' and 'etcdctl' to /usr/local/bin/"
   ansible.builtin.copy:
     src: "/tmp/etcd_{{ etcd_version }}/{{ item }}"
-    dest: /usr/local/bin/
+    dest: "{{ etcd_bin_dir }}"
     mode: u+x,g+x,o+x
     remote_src: true
   loop:
