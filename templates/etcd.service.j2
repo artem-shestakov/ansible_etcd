@@ -7,7 +7,7 @@ After=network.target
 Type=notify
 WorkingDirectory={{ etcd_data_dir }}
 User=etcd
-ExecStart=/bin/bash -c "/usr/local/bin/etcd --config-file {{ etcd_config_dir }}/{{ etcd_config_file_name }}"
+ExecStart=/bin/bash -c "{{ etcd_bin_dir }}/etcd --config-file {{ etcd_config_dir }}/{{ etcd_config_file_name }}"
 Restart=on-failure
 
 [Install]
