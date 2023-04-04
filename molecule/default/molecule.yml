@@ -33,9 +33,21 @@ provisioner:
 verifier:
   name: testinfra
   options:
-    connection: docker
     v: 2
 lint: |
   set -e
   yamllint .
   ansible-lint -v
+scenario:
+  test_sequence:
+    - dependency
+    - cleanup
+    - destroy
+    - syntax
+    - create
+    - prepare
+    - converge
+    - side_effect
+    - verify
+    - cleanup
+    - destroy
