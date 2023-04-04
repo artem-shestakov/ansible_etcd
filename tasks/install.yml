@@ -4,17 +4,49 @@
     shell: /usr/sbin/nologin
     home: "{{ etcd_data_dir }}"
 
-- name: "Install Etcd | Create directory for Etcd"
+- name: "Install Etcd | Create tmp, data and config directory for Etcd"
   ansible.builtin.file:
     path: "{{ item.path }}"
     state: directory
     owner: etcd
-    # group: root
+    group: etcd
     mode: "{{ item.mode }}"
+    recurse: true
   with_items: 
     - {path: "/tmp/etcd_{{ etcd_version }}", mode: '0755'}
     - {path: "{{ etcd_config_dir }}", mode: '0700'}
     - {path: "{{ etcd_data_dir }}", mode: '0700'}
+
+- name: "Install Etcd | Check if directory for binary exists"
+  ansible.builtin.stat:
+    path: "{{ etcd_bin_dir }}"
+  register: bin_dir
+
+- name: "Install Etcd | Create directory for binary"
+  ansible.builtin.file:
+    path: "{{ etcd_bin_dir }}"
+    state: directory
+    owner: etcd
+    group: etcd
+    mode: '0755'
+  when: not bin_dir.stat.exists
+
+- name: "Install Etcd | Prepare wal directory"
+  when: etcd_wal_dir != ""
+  block:
+  - name: "Install Etcd | Check if wal directory exists"
+    ansible.builtin.stat:
+      path: "{{ etcd_wal_dir }}"
+    register: wal_dir
+
+  - name: "Install Etcd | Create wal directory"
+    ansible.builtin.file:
+      path: "{{ etcd_wal_dir }}"
+      state: directory
+      owner: etcd
+      group: etcd
+      mode: '0700'
+    when: not wal_dir.stat.exists
 
 - name: "Install Etcd | Download the tarball into the /tmp directory"
   ansible.builtin.get_url:
